@@ -1,0 +1,10 @@
+{% extends "inventory/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Enregistrer">
+  <a href="{% url 'inventory:user-list' %}">Annuler</a>
+</form>
+{% endblock %}

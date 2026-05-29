@@ -1,0 +1,8 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<p>Supprimer le lien <b>{{ object }}</b> ?</p>
+<form method="post">{% csrf_token %}
+  <input type="submit" value="Confirmer">
+  <a href="{% url 'inventory:resourceusage-list' %}">Annuler</a>
+</form>
+{% endblock %}

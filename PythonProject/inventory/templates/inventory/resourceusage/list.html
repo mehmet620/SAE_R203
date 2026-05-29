@@ -1,0 +1,17 @@
+{% extends "inventory/base.html" %}
+{% block title %}Usages de ressources{% endblock %}
+{% block content %}
+<h2>Usages de ressources</h2>
+<a href="{% url 'inventory:resourceusage-create' %}">+ Nouveau lien</a>
+<table border="1" cellpadding="5">
+  <tr><th>Application</th><th>Service</th><th>Serveur</th><th>Actions</th></tr>
+  {% for u in usages %}
+  <tr>
+    <td><a href="{% url 'inventory:application-detail' u.application.pk %}">{{ u.application }}</a></td>
+    <td>{{ u.service }}</td>
+    <td>{{ u.service.launch_server }}</td>
+    <td><a href="{% url 'inventory:resourceusage-delete' u.pk %}">Supprimer</a></td>
+  </tr>
+  {% empty %}<tr><td colspan="4">Aucun lien.</td></tr>{% endfor %}
+</table>
+{% endblock %}

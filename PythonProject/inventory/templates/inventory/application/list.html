@@ -1,0 +1,20 @@
+{% extends "inventory/base.html" %}
+{% block title %}Applications{% endblock %}
+{% block content %}
+<h2>Applications</h2>
+<a href="{% url 'inventory:application-create' %}">+ Nouveau</a>
+<table border="1" cellpadding="5">
+  <tr><th>Nom</th><th>Logo</th><th>Responsable</th><th>Actions</th></tr>
+  {% for app in applications %}
+  <tr>
+    <td><a href="{% url 'inventory:application-detail' app.pk %}">{{ app.name }}</a></td>
+    <td>{% if app.logo %}<img src="{{ app.logo.url }}" height="40">{% else %}-{% endif %}</td>
+    <td>{{ app.user }}</td>
+    <td>
+      <a href="{% url 'inventory:application-update' app.pk %}">Modifier</a>
+      <a href="{% url 'inventory:application-delete' app.pk %}">Supprimer</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="4">Aucune application.</td></tr>{% endfor %}
+</table>
+{% endblock %}

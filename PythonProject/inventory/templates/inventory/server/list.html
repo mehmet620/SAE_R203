@@ -1,0 +1,24 @@
+{% extends "inventory/base.html" %}
+{% block title %}Serveurs{% endblock %}
+{% block content %}
+<h2>Serveurs</h2>
+<a href="{% url 'inventory:server-create' %}">+ Nouveau</a>
+<table border="1" cellpadding="5">
+  <tr><th>Nom</th><th>Type</th><th>CPU</th><th>Mémoire (Go)</th><th>Libre (Go)</th><th>Stockage (Go)</th><th>Actions</th></tr>
+  {% for srv in servers %}
+  <tr>
+    <td><a href="{% url 'inventory:server-detail' srv.pk %}">{{ srv.name }}</a></td>
+    <td>{{ srv.server_type }}</td>
+    <td>{{ srv.cpu_count }}</td>
+    <td>{{ srv.memory_capacity_gb }}</td>
+    <td>{{ srv.free_memory_gb|floatformat:1 }}</td>
+    <td>{{ srv.storage_capacity_gb }}</td>
+    <td>
+      <a href="{% url 'inventory:server-report' srv.pk %}">Rapport</a>
+      <a href="{% url 'inventory:server-update' srv.pk %}">Modifier</a>
+      <a href="{% url 'inventory:server-delete' srv.pk %}">Supprimer</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="7">Aucun serveur.</td></tr>{% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Server Manager{% endblock %}</title>
+</head>
+<body>
+
+<a href="{% url 'inventory:home' %}">Accueil</a> |
+<a href="{% url 'inventory:server-list' %}">Serveurs</a> |
+<a href="{% url 'inventory:service-list' %}">Services</a> |
+<a href="{% url 'inventory:application-list' %}">Applications</a> |
+<a href="{% url 'inventory:user-list' %}">Utilisateurs</a> |
+<a href="{% url 'inventory:servertype-list' %}">Types</a> |
+<a href="{% url 'inventory:resourceusage-list' %}">Usages</a> |
+<a href="{% url 'inventory:report-index' %}">Rapports</a> |
+<a href="{% url 'inventory:json-import' %}">Import JSON</a> |
+<a href="/admin/">Admin</a>
+
+<hr>
+
+{% if messages %}
+  {% for msg in messages %}<p><b>{{ msg }}</b></p>{% endfor %}
+{% endif %}
+
+{% block content %}{% endblock %}
+
+</body>
+</html>

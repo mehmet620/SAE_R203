@@ -1,0 +1,45 @@
+{% extends "inventory/base.html" %}
+{% block title %}Import JSON{% endblock %}
+{% block content %}
+<h2>Import JSON</h2>
+
+<form method="post" enctype="multipart/form-data">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Importer">
+</form>
+
+<hr>
+<h3>Format du fichier attendu</h3>
+<pre>
+{
+  "application_name": "MonApplication",
+  "user": {
+    "email": "alice@example.com",
+    "first_name": "Alice",
+    "last_name": "Dupont"
+  },
+  "services": [
+    {
+      "name": "nginx",
+      "launch_date": "2024-01-15",
+      "used_memory_gb": 2.0,
+      "required_ram_gb": 4.0,
+      "launch_server": "srv-prod-01"
+    }
+  ]
+}
+</pre>
+
+<table border="1" cellpadding="5">
+  <tr><th>Champ</th><th>Obligatoire</th><th>Remarque</th></tr>
+  <tr><td>application_name</td><td>Oui</td><td>Doit être unique</td></tr>
+  <tr><td>user.email</td><td>Oui</td><td>Retrouve ou crée l'utilisateur</td></tr>
+  <tr><td>user.first_name / last_name</td><td>Non</td><td>Utilisé uniquement si l'utilisateur est créé</td></tr>
+  <tr><td>services[].name</td><td>Oui</td><td>Créé s'il n'existe pas</td></tr>
+  <tr><td>services[].launch_date</td><td>Oui</td><td>Format YYYY-MM-DD</td></tr>
+  <tr><td>services[].used_memory_gb</td><td>Oui</td><td>Validé contre la capacité libre</td></tr>
+  <tr><td>services[].required_ram_gb</td><td>Oui</td><td>Validé contre la capacité libre</td></tr>
+  <tr><td>services[].launch_server</td><td>Oui</td><td>Nom exact d'un serveur existant</td></tr>
+</table>
+<p>En cas d'erreur, aucune donnée n'est enregistrée.</p>
+{% endblock %}

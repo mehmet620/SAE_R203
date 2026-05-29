@@ -1,0 +1,18 @@
+{% extends "inventory/base.html" %}
+{% block title %}Utilisateurs{% endblock %}
+{% block content %}
+<h2>Utilisateurs</h2>
+<a href="{% url 'inventory:user-create' %}">+ Nouveau</a>
+<table border="1" cellpadding="5">
+  <tr><th>Nom</th><th>Prénom</th><th>Email</th><th>Actions</th></tr>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.last_name }}</td><td>{{ u.first_name }}</td><td>{{ u.email }}</td>
+    <td>
+      <a href="{% url 'inventory:user-update' u.pk %}">Modifier</a>
+      <a href="{% url 'inventory:user-delete' u.pk %}">Supprimer</a>
+    </td>
+  </tr>
+  {% empty %}<tr><td colspan="4">Aucun utilisateur.</td></tr>{% endfor %}
+</table>
+{% endblock %}

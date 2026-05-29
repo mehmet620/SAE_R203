@@ -1,0 +1,16 @@
+{% extends "inventory/base.html" %}
+{% block title %}{{ server.name }}{% endblock %}
+{% block content %}
+<h2>{{ server.name }}</h2>
+<p>Type : {{ server.server_type }} | CPU : {{ server.cpu_count }} | Mémoire : {{ server.memory_capacity_gb }} Go | Stockage : {{ server.storage_capacity_gb }} Go</p>
+<a href="{% url 'inventory:server-update' server.pk %}">Modifier</a>
+<a href="{% url 'inventory:server-report' server.pk %}">Rapport</a>
+<a href="{% url 'inventory:server-list' %}">Retour</a>
+<h3>Services déployés</h3>
+<table border="1" cellpadding="5">
+  <tr><th>Nom</th><th>Date lancement</th><th>Mémoire utilisée</th><th>RAM requise</th></tr>
+  {% for svc in server.services.all %}
+  <tr><td>{{ svc.name }}</td><td>{{ svc.launch_date }}</td><td>{{ svc.used_memory_gb }} Go</td><td>{{ svc.required_ram_gb }} Go</td></tr>
+  {% empty %}<tr><td colspan="4">Aucun service.</td></tr>{% endfor %}
+</table>
+{% endblock %}

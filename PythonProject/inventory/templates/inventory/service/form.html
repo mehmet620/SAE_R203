@@ -1,0 +1,11 @@
+{% extends "inventory/base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+<p><i>La mémoire sera vérifiée par rapport à la capacité disponible du serveur.</i></p>
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Enregistrer">
+  <a href="{% url 'inventory:service-list' %}">Annuler</a>
+</form>
+{% endblock %}

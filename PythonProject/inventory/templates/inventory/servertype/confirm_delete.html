@@ -1,0 +1,8 @@
+{% extends "inventory/base.html" %}
+{% block content %}
+<p>Supprimer <b>{{ object }}</b> ?</p>
+<form method="post">{% csrf_token %}
+  <input type="submit" value="Confirmer">
+  <a href="{% url 'inventory:servertype-list' %}">Annuler</a>
+</form>
+{% endblock %}
