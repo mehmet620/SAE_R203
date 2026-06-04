@@ -3,28 +3,28 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.db import transaction
 
-from .models import ServerType, Server, User, Service, Application, ResourceUsage
-from .forms import ServerTypeForm, ServerForm, UserForm, ServiceForm, ApplicationForm, ResourceUsageForm, JSONImportForm
+from .models import TypeServeur, Serveur, Utilisateur, Service, Application, UsageRessource
+from .forms import TypeServeurForm, ServeurForm, UtilisateurForm, ServiceForm, ApplicationForm, UsageRessourceForm, JSONImportForm
 
 
 # ── Accueil ───────────────────────────────────────────────────────────────────
 
 def home(request):
     return render(request, 'inventory/home.html', {
-        'server_count':      Server.objects.count(),
+        'server_count':      Serveur.objects.count(),
         'service_count':     Service.objects.count(),
         'application_count': Application.objects.count(),
-        'user_count':        User.objects.count(),
+        'user_count':        Utilisateur.objects.count(),
     })
 
 
-# ── ServerType ────────────────────────────────────────────────────────────────
+# ── TypeServeur ───────────────────────────────────────────────────────────────
 
 def servertype_list(request):
-    return render(request, 'inventory/servertype/list.html', {'servertypes': ServerType.objects.all()})
+    return render(request, 'inventory/servertype/list.html', {'servertypes': TypeServeur.objects.all()})
 
 def servertype_create(request):
-    form = ServerTypeForm(request.POST or None)
+    form = TypeServeurForm(request.POST or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Type créé.")
@@ -32,8 +32,8 @@ def servertype_create(request):
     return render(request, 'inventory/servertype/form.html', {'form': form, 'title': 'Nouveau type de serveur'})
 
 def servertype_update(request, pk):
-    obj = get_object_or_404(ServerType, pk=pk)
-    form = ServerTypeForm(request.POST or None, instance=obj)
+    obj = get_object_or_404(TypeServeur, pk=pk)
+    form = TypeServeurForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
         messages.success(request, "Type modifié.")
@@ -41,7 +41,7 @@ def servertype_update(request, pk):
     return render(request, 'inventory/servertype/form.html', {'form': form, 'title': f'Modifier {obj}'})
 
 def servertype_delete(request, pk):
-    obj = get_object_or_404(ServerType, pk=pk)
+    obj = get_object_or_404(TypeServeur, pk=pk)
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Type supprimé.")
@@ -49,17 +49,17 @@ def servertype_delete(request, pk):
     return render(request, 'inventory/servertype/confirm_delete.html', {'object': obj})
 
 
-# ── Server ────────────────────────────────────────────────────────────────────
+# ── Serveur ───────────────────────────────────────────────────────────────────
 
 def server_list(request):
-    return render(request, 'inventory/server/list.html', {'servers': Server.objects.select_related('server_type').prefetch_related('services')})
+    return render(request, 'inventory/server/list.html', {'servers': Serveur.objects.select_related('type_serveur').prefetch_related('services')})
 
 def server_detail(request, pk):
-    server = get_object_or_404(Server, pk=pk)
+    server = get_object_or_404(Serveur, pk=pk)
     return render(request, 'inventory/server/detail.html', {'server': server})
 
 def server_create(request):
-    form = ServerForm(request.POST or None)
+    form = ServeurForm(request.POST or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Serveur créé.")
@@ -67,8 +67,8 @@ def server_create(request):
     return render(request, 'inventory/server/form.html', {'form': form, 'title': 'Nouveau serveur'})
 
 def server_update(request, pk):
-    obj = get_object_or_404(Server, pk=pk)
-    form = ServerForm(request.POST or None, instance=obj)
+    obj = get_object_or_404(Serveur, pk=pk)
+    form = ServeurForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
         messages.success(request, "Serveur modifié.")
@@ -76,7 +76,7 @@ def server_update(request, pk):
     return render(request, 'inventory/server/form.html', {'form': form, 'title': f'Modifier {obj}'})
 
 def server_delete(request, pk):
-    obj = get_object_or_404(Server, pk=pk)
+    obj = get_object_or_404(Serveur, pk=pk)
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Serveur supprimé.")
@@ -84,13 +84,13 @@ def server_delete(request, pk):
     return render(request, 'inventory/server/confirm_delete.html', {'object': obj})
 
 
-# ── User ──────────────────────────────────────────────────────────────────────
+# ── Utilisateur ───────────────────────────────────────────────────────────────
 
 def user_list(request):
-    return render(request, 'inventory/user/list.html', {'users': User.objects.all()})
+    return render(request, 'inventory/user/list.html', {'users': Utilisateur.objects.all()})
 
 def user_create(request):
-    form = UserForm(request.POST or None)
+    form = UtilisateurForm(request.POST or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Utilisateur créé.")
@@ -98,8 +98,8 @@ def user_create(request):
     return render(request, 'inventory/user/form.html', {'form': form, 'title': 'Nouvel utilisateur'})
 
 def user_update(request, pk):
-    obj = get_object_or_404(User, pk=pk)
-    form = UserForm(request.POST or None, instance=obj)
+    obj = get_object_or_404(Utilisateur, pk=pk)
+    form = UtilisateurForm(request.POST or None, instance=obj)
     if form.is_valid():
         form.save()
         messages.success(request, "Utilisateur modifié.")
@@ -107,7 +107,7 @@ def user_update(request, pk):
     return render(request, 'inventory/user/form.html', {'form': form, 'title': f'Modifier {obj}'})
 
 def user_delete(request, pk):
-    obj = get_object_or_404(User, pk=pk)
+    obj = get_object_or_404(Utilisateur, pk=pk)
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Utilisateur supprimé.")
@@ -118,7 +118,7 @@ def user_delete(request, pk):
 # ── Service ───────────────────────────────────────────────────────────────────
 
 def service_list(request):
-    return render(request, 'inventory/service/list.html', {'services': Service.objects.select_related('launch_server')})
+    return render(request, 'inventory/service/list.html', {'services': Service.objects.select_related('serveur')})
 
 def service_create(request):
     form = ServiceForm(request.POST or None)
@@ -149,7 +149,7 @@ def service_delete(request, pk):
 # ── Application ───────────────────────────────────────────────────────────────
 
 def application_list(request):
-    return render(request, 'inventory/application/list.html', {'applications': Application.objects.select_related('user')})
+    return render(request, 'inventory/application/list.html', {'applications': Application.objects.select_related('utilisateur')})
 
 def application_detail(request, pk):
     app = get_object_or_404(Application, pk=pk)
@@ -181,13 +181,13 @@ def application_delete(request, pk):
     return render(request, 'inventory/application/confirm_delete.html', {'object': obj})
 
 
-# ── ResourceUsage ─────────────────────────────────────────────────────────────
+# ── UsageRessource ────────────────────────────────────────────────────────────
 
 def resourceusage_list(request):
-    return render(request, 'inventory/resourceusage/list.html', {'usages': ResourceUsage.objects.select_related('application', 'service__launch_server')})
+    return render(request, 'inventory/resourceusage/list.html', {'usages': UsageRessource.objects.select_related('application', 'service__serveur')})
 
 def resourceusage_create(request):
-    form = ResourceUsageForm(request.POST or None)
+    form = UsageRessourceForm(request.POST or None)
     if form.is_valid():
         form.save()
         messages.success(request, "Lien créé.")
@@ -195,7 +195,7 @@ def resourceusage_create(request):
     return render(request, 'inventory/resourceusage/form.html', {'form': form, 'title': 'Lier une application à un service'})
 
 def resourceusage_delete(request, pk):
-    obj = get_object_or_404(ResourceUsage, pk=pk)
+    obj = get_object_or_404(UsageRessource, pk=pk)
     if request.method == 'POST':
         obj.delete()
         messages.success(request, "Lien supprimé.")
@@ -209,28 +209,28 @@ def report_index(request):
     pk = request.GET.get('server')
     if pk:
         return redirect('inventory:server-report', pk=pk)
-    return render(request, 'inventory/report/server_report.html', {'servers': Server.objects.all()})
+    return render(request, 'inventory/report/server_report.html', {'servers': Serveur.objects.all()})
 
 def server_report(request, pk):
-    server = get_object_or_404(Server, pk=pk)
-    services = server.services.prefetch_related('resource_usages__application')
+    server   = get_object_or_404(Serveur, pk=pk)
+    services = server.services.prefetch_related('usages_ressource__application')
 
     rows = []
     for svc in services:
         rows.append({
-            'service': svc,
-            'used_memory_gb': svc.used_memory_gb,
-            'applications': [ru.application for ru in svc.resource_usages.all()],
+            'service':        svc,
+            'used_memory_gb': svc.espace_memoire_utilise,
+            'applications':   [ru.application for ru in svc.usages_ressource.all()],
         })
 
     return render(request, 'inventory/report/server_report.html', {
         'server':               server,
         'rows':                 rows,
         'total_used_memory_gb': round(server.used_memory_gb(), 2),
-        'total_capacity_gb':    server.memory_capacity_gb,
+        'total_capacity_gb':    server.capacite_memoire,
         'utilization_pct':      server.memory_utilization_pct(),
         'free_memory_gb':       round(server.free_memory_gb(), 2),
-        'servers':              Server.objects.all(),
+        'servers':              Serveur.objects.all(),
     })
 
 
@@ -267,38 +267,43 @@ def _do_import(data):
     app_name = data.get('application_name')
     if not app_name:
         return ["application_name est obligatoire."]
-    if Application.objects.filter(name=app_name).exists():
+    if Application.objects.filter(nom_application=app_name).exists():
         return [f"L'application '{app_name}' existe déjà."]
 
     try:
         with transaction.atomic():
-            user, _ = User.objects.get_or_create(
+            utilisateur, _ = Utilisateur.objects.get_or_create(
                 email=user_data['email'],
-                defaults={'first_name': user_data.get('first_name', ''), 'last_name': user_data.get('last_name', '')}
+                defaults={'prenom': user_data.get('first_name', ''), 'nom': user_data.get('last_name', '')}
             )
-            app = Application.objects.create(name=app_name, user=user)
+            app = Application.objects.create(nom_application=app_name, utilisateur=utilisateur)
 
             for i, svc_data in enumerate(data.get('services', [])):
                 try:
-                    server = Server.objects.get(name=svc_data['launch_server'])
-                except (Server.DoesNotExist, KeyError):
+                    serveur = Serveur.objects.get(nom=svc_data['launch_server'])
+                except (Serveur.DoesNotExist, KeyError):
                     errors.append(f"Service {i} : serveur '{svc_data.get('launch_server')}' introuvable.")
                     continue
 
-                used = svc_data.get('used_memory_gb', 0)
-                ram  = svc_data.get('required_ram_gb', 0)
-                free = server.free_memory_gb()
+                utilise = svc_data.get('used_memory_gb', 0)
+                ram     = svc_data.get('required_ram_gb', 0)
+                libre   = serveur.free_memory_gb()
 
-                if used > free or ram > free:
-                    errors.append(f"Service {i} '{svc_data.get('name')}' : mémoire insuffisante sur {server.name} ({free:.1f} Go libres).")
+                if utilise > libre or ram > libre:
+                    errors.append(f"Service {i} '{svc_data.get('name')}' : mémoire insuffisante sur {serveur.nom} ({libre} Go libres).")
                     continue
 
                 try:
                     svc, _ = Service.objects.get_or_create(
-                        name=svc_data['name'],
-                        defaults={'launch_date': svc_data['launch_date'], 'used_memory_gb': used, 'required_ram_gb': ram, 'launch_server': server}
+                        nom_service=svc_data['name'],
+                        defaults={
+                            'date_lancement':          svc_data['launch_date'],
+                            'espace_memoire_utilise':  utilise,
+                            'memoire_vive_necessaire': ram,
+                            'serveur':                 serveur,
+                        }
                     )
-                    ResourceUsage.objects.get_or_create(application=app, service=svc)
+                    UsageRessource.objects.get_or_create(application=app, service=svc)
                 except KeyError as e:
                     errors.append(f"Service {i} : champ manquant {e}.")
 

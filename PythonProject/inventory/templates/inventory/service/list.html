@@ -4,14 +4,14 @@
 <h2>Services</h2>
 <a href="{% url 'inventory:service-create' %}">+ Nouveau</a>
 <table border="1" cellpadding="5">
-  <tr><th>Nom</th><th>Serveur</th><th>Date lancement</th><th>Mémoire utilisée</th><th>RAM requise</th><th>Actions</th></tr>
+  <tr><th>Nom</th><th>Serveur</th><th>Date lancement</th><th>Mémoire utilisée (Go)</th><th>RAM nécessaire (Go)</th><th>Actions</th></tr>
   {% for svc in services %}
   <tr>
-    <td>{{ svc.name }}</td>
-    <td><a href="{% url 'inventory:server-detail' svc.launch_server.pk %}">{{ svc.launch_server }}</a></td>
-    <td>{{ svc.launch_date }}</td>
-    <td>{{ svc.used_memory_gb }} Go</td>
-    <td>{{ svc.required_ram_gb }} Go</td>
+    <td>{{ svc.nom_service }}</td>
+    <td><a href="{% url 'inventory:server-detail' svc.serveur.pk %}">{{ svc.serveur }}</a></td>
+    <td>{{ svc.date_lancement }}</td>
+    <td>{{ svc.espace_memoire_utilise }}</td>
+    <td>{{ svc.memoire_vive_necessaire }}</td>
     <td>
       <a href="{% url 'inventory:service-update' svc.pk %}">Modifier</a>
       <a href="{% url 'inventory:service-delete' svc.pk %}">Supprimer</a>

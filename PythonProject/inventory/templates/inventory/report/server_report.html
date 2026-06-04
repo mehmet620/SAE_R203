@@ -8,24 +8,24 @@
   <select name="server" onchange="this.form.submit()">
     <option value="">-- Choisir --</option>
     {% for s in servers %}
-    <option value="{{ s.pk }}" {% if server and s.pk == server.pk %}selected{% endif %}>{{ s.name }}</option>
+    <option value="{{ s.pk }}" {% if server and s.pk == server.pk %}selected{% endif %}>{{ s.nom }}</option>
     {% endfor %}
   </select>
 </form>
 
 {% if server %}
-<h3>{{ server.name }} — {{ server.server_type }}</h3>
+<h3>{{ server.nom }} — {{ server.type_serveur }}</h3>
 <p>Capacité : {{ total_capacity_gb }} Go | Utilisé : {{ total_used_memory_gb }} Go | Libre : {{ free_memory_gb }} Go | Utilisation : {{ utilization_pct }}%</p>
 
 <table border="1" cellpadding="5">
-  <tr><th>Service</th><th>Date lancement</th><th>Mémoire utilisée (Go)</th><th>RAM requise (Go)</th><th>Applications</th></tr>
+  <tr><th>Service</th><th>Date lancement</th><th>Mémoire utilisée (Go)</th><th>RAM nécessaire (Go)</th><th>Applications</th></tr>
   {% for row in rows %}
   <tr>
-    <td>{{ row.service.name }}</td>
-    <td>{{ row.service.launch_date }}</td>
+    <td>{{ row.service.nom_service }}</td>
+    <td>{{ row.service.date_lancement }}</td>
     <td>{{ row.used_memory_gb }}</td>
-    <td>{{ row.service.required_ram_gb }}</td>
-    <td>{% for app in row.applications %}{{ app.name }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</td>
+    <td>{{ row.service.memoire_vive_necessaire }}</td>
+    <td>{% for app in row.applications %}{{ app.nom_application }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}</td>
   </tr>
   {% empty %}<tr><td colspan="5">Aucun service.</td></tr>{% endfor %}
   <tr><td><b>Total</b></td><td></td><td><b>{{ total_used_memory_gb }}</b></td><td></td><td></td></tr>

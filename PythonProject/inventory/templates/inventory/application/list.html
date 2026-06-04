@@ -7,9 +7,9 @@
   <tr><th>Nom</th><th>Logo</th><th>Responsable</th><th>Actions</th></tr>
   {% for app in applications %}
   <tr>
-    <td><a href="{% url 'inventory:application-detail' app.pk %}">{{ app.name }}</a></td>
+    <td><a href="{% url 'inventory:application-detail' app.pk %}">{{ app.nom_application }}</a></td>
     <td>{% if app.logo %}<img src="{{ app.logo.url }}" height="40">{% else %}-{% endif %}</td>
-    <td>{{ app.user }}</td>
+    <td>{{ app.utilisateur }}</td>
     <td>
       <a href="{% url 'inventory:application-update' app.pk %}">Modifier</a>
       <a href="{% url 'inventory:application-delete' app.pk %}">Supprimer</a>

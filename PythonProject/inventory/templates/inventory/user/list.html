@@ -7,7 +7,7 @@
   <tr><th>Nom</th><th>Prénom</th><th>Email</th><th>Actions</th></tr>
   {% for u in users %}
   <tr>
-    <td>{{ u.last_name }}</td><td>{{ u.first_name }}</td><td>{{ u.email }}</td>
+    <td>{{ u.nom }}</td><td>{{ u.prenom }}</td><td>{{ u.email }}</td>
     <td>
       <a href="{% url 'inventory:user-update' u.pk %}">Modifier</a>
       <a href="{% url 'inventory:user-delete' u.pk %}">Supprimer</a>

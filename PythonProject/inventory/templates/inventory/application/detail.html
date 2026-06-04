@@ -1,20 +1,20 @@
 {% extends "inventory/base.html" %}
-{% block title %}{{ application.name }}{% endblock %}
+{% block title %}{{ application.nom_application }}{% endblock %}
 {% block content %}
-<h2>{{ application.name }}</h2>
+<h2>{{ application.nom_application }}</h2>
 {% if application.logo %}<img src="{{ application.logo.url }}" height="60"><br>{% endif %}
-<p>Responsable : {{ application.user }}</p>
+<p>Responsable : {{ application.utilisateur }}</p>
 <a href="{% url 'inventory:application-update' application.pk %}">Modifier</a>
 <a href="{% url 'inventory:application-list' %}">Retour</a>
 <h3>Services utilisés</h3>
 <table border="1" cellpadding="5">
-  <tr><th>Service</th><th>Serveur</th><th>Mémoire utilisée</th><th>Date lancement</th></tr>
-  {% for ru in application.resource_usages.all %}
+  <tr><th>Service</th><th>Serveur</th><th>Mémoire utilisée (Go)</th><th>Date lancement</th></tr>
+  {% for ru in application.usages_ressource.all %}
   <tr>
-    <td>{{ ru.service.name }}</td>
-    <td>{{ ru.service.launch_server }}</td>
-    <td>{{ ru.service.used_memory_gb }} Go</td>
-    <td>{{ ru.service.launch_date }}</td>
+    <td>{{ ru.service.nom_service }}</td>
+    <td>{{ ru.service.serveur }}</td>
+    <td>{{ ru.service.espace_memoire_utilise }}</td>
+    <td>{{ ru.service.date_lancement }}</td>
   </tr>
   {% empty %}<tr><td colspan="4">Aucun service lié.</td></tr>{% endfor %}
 </table>

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+*.pyo
+db.sqlite3
+db_view.html
+db_view.py
+media/

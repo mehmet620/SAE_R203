@@ -1,6 +1,6 @@
 from datetime import date
 from django.core.management.base import BaseCommand
-from inventory.models import ServerType, Server, User, Service, Application, ResourceUsage
+from inventory.models import TypeServeur, Serveur, Utilisateur, Service, Application, UsageRessource
 
 
 class Command(BaseCommand):
@@ -9,136 +9,98 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self.stdout.write("Peuplement de la base de données...")
 
-        # Server Types
-        blade, _ = ServerType.objects.get_or_create(
-            type='Blade', defaults={'description': 'Serveur lame haute densité'}
+        # Types de serveur
+        rack,    _ = TypeServeur.objects.get_or_create(type='Rack',    defaults={'description': 'Serveur monté en baie'})
+        blade,   _ = TypeServeur.objects.get_or_create(type='Blade',   defaults={'description': 'Serveur lame haute densité'})
+        tower,   _ = TypeServeur.objects.get_or_create(type='Tower',   defaults={'description': 'Serveur tour de bureau'})
+        virtual, _ = TypeServeur.objects.get_or_create(type='Virtual', defaults={'description': 'Machine virtuelle'})
+
+        # Serveurs Cisco
+        srv1, _ = Serveur.objects.get_or_create(
+            nom='Cisco-UCS-C220',
+            defaults={'type_serveur': rack, 'nombre_processeur': 2, 'capacite_memoire': 64, 'capacite_stockage': 1000,
+                      }
         )
-        rack, _ = ServerType.objects.get_or_create(
-            type='Rack', defaults={'description': 'Serveur monté en baie standard'}
+        srv2, _ = Serveur.objects.get_or_create(
+            nom='Cisco-UCS-C240',
+            defaults={'type_serveur': rack, 'nombre_processeur': 4, 'capacite_memoire': 128, 'capacite_stockage': 2000,
+                      }
         )
-        tower, _ = ServerType.objects.get_or_create(
-            type='Tower', defaults={'description': 'Serveur tour autonome'}
+        srv3, _ = Serveur.objects.get_or_create(
+            nom='Cisco-UCS-B200',
+            defaults={'type_serveur': blade, 'nombre_processeur': 2, 'capacite_memoire': 32, 'capacite_stockage': 500,
+                      }
         )
-        virtual, _ = ServerType.objects.get_or_create(
-            type='Virtual', defaults={'description': 'Instance de serveur virtualisé'}
+        srv4, _ = Serveur.objects.get_or_create(
+            nom='Cisco-UCS-E160S',
+            defaults={'type_serveur': virtual, 'nombre_processeur': 1, 'capacite_memoire': 16, 'capacite_stockage': 200,
+                      }
         )
 
-        # Servers
-        srv1, _ = Server.objects.get_or_create(
-            name='srv-prod-01',
-            defaults={
-                'server_type': rack,
-                'cpu_count': 32,
-                'memory_capacity_gb': 256.0,
-                'storage_capacity_gb': 4000.0,
-            }
-        )
-        srv2, _ = Server.objects.get_or_create(
-            name='srv-prod-02',
-            defaults={
-                'server_type': rack,
-                'cpu_count': 16,
-                'memory_capacity_gb': 128.0,
-                'storage_capacity_gb': 2000.0,
-            }
-        )
-        srv3, _ = Server.objects.get_or_create(
-            name='srv-dev-01',
-            defaults={
-                'server_type': virtual,
-                'cpu_count': 8,
-                'memory_capacity_gb': 32.0,
-                'storage_capacity_gb': 500.0,
-            }
-        )
-        srv4, _ = Server.objects.get_or_create(
-            name='srv-blade-01',
-            defaults={
-                'server_type': blade,
-                'cpu_count': 64,
-                'memory_capacity_gb': 512.0,
-                'storage_capacity_gb': 8000.0,
-            }
-        )
+        # Utilisateurs
+        u1, _ = Utilisateur.objects.get_or_create(email='mehmet.ozmen@iut.fr',      defaults={'prenom': 'Mehmet',     'nom': 'Ozmen'})
+        u2, _ = Utilisateur.objects.get_or_create(email='leo.gasser@iut.fr',         defaults={'prenom': 'Leo',        'nom': 'Gasser'})
+        u3, _ = Utilisateur.objects.get_or_create(email='alessandro.bauer@iut.fr',   defaults={'prenom': 'Alessandro', 'nom': 'Bauer'})
+        u4, _ = Utilisateur.objects.get_or_create(email='sicari.bennoune@iut.fr',    defaults={'prenom': 'Sicari',     'nom': 'Bennoune'})
+        u5, _ = Utilisateur.objects.get_or_create(email='adam.sebar@iut.fr',         defaults={'prenom': 'Adam',       'nom': 'Sebar'})
 
-        # Users
-        u1, _ = User.objects.get_or_create(
-            email='alice@example.com',
-            defaults={'first_name': 'Alice', 'last_name': 'Dupont'}
-        )
-        u2, _ = User.objects.get_or_create(
-            email='bob@example.com',
-            defaults={'first_name': 'Bob', 'last_name': 'Martin'}
-        )
-        u3, _ = User.objects.get_or_create(
-            email='carol@example.com',
-            defaults={'first_name': 'Carol', 'last_name': 'Bernard'}
-        )
-
-        # Services
+        # Services (connus du grand public)
         svc1, _ = Service.objects.get_or_create(
-            name='nginx',
+            nom_service='DNS',
             defaults={
-                'launch_date': date(2023, 6, 1),
-                'used_memory_gb': 2.0,
-                'required_ram_gb': 4.0,
-                'launch_server': srv1,
+                'date_lancement': date(2023, 9, 1),
+                'espace_memoire_utilise': 2,
+                'memoire_vive_necessaire': 4,
+                'serveur': srv1,
             }
         )
         svc2, _ = Service.objects.get_or_create(
-            name='postgresql',
+            nom_service='DHCP',
             defaults={
-                'launch_date': date(2023, 6, 1),
-                'used_memory_gb': 16.0,
-                'required_ram_gb': 32.0,
-                'launch_server': srv1,
+                'date_lancement': date(2023, 9, 1),
+                'espace_memoire_utilise': 1,
+                'memoire_vive_necessaire': 2,
+                'serveur': srv1,
             }
         )
         svc3, _ = Service.objects.get_or_create(
-            name='redis',
+            nom_service='Serveur Web (HTTP)',
             defaults={
-                'launch_date': date(2023, 8, 15),
-                'used_memory_gb': 4.0,
-                'required_ram_gb': 8.0,
-                'launch_server': srv2,
+                'date_lancement': date(2023, 10, 15),
+                'espace_memoire_utilise': 8,
+                'memoire_vive_necessaire': 16,
+                'serveur': srv2,
             }
         )
         svc4, _ = Service.objects.get_or_create(
-            name='rabbitmq',
+            nom_service='FTP',
             defaults={
-                'launch_date': date(2023, 9, 1),
-                'used_memory_gb': 3.0,
-                'required_ram_gb': 6.0,
-                'launch_server': srv3,
+                'date_lancement': date(2023, 11, 1),
+                'espace_memoire_utilise': 4,
+                'memoire_vive_necessaire': 8,
+                'serveur': srv3,
             }
         )
         svc5, _ = Service.objects.get_or_create(
-            name='elasticsearch',
+            nom_service='Messagerie (SMTP)',
             defaults={
-                'launch_date': date(2024, 1, 10),
-                'used_memory_gb': 30.0,
-                'required_ram_gb': 64.0,
-                'launch_server': srv4,
+                'date_lancement': date(2024, 1, 10),
+                'espace_memoire_utilise': 6,
+                'memoire_vive_necessaire': 12,
+                'serveur': srv2,
             }
         )
 
         # Applications
-        app1, _ = Application.objects.get_or_create(
-            name='WebFrontend', defaults={'user': u1}
-        )
-        app2, _ = Application.objects.get_or_create(
-            name='DataPipeline', defaults={'user': u2}
-        )
-        app3, _ = Application.objects.get_or_create(
-            name='SearchEngine', defaults={'user': u3}
-        )
+        app1, _ = Application.objects.get_or_create(nom_application='Réseau local',       defaults={'utilisateur': u1})
+        app2, _ = Application.objects.get_or_create(nom_application='Site de l\'école',   defaults={'utilisateur': u2})
+        app3, _ = Application.objects.get_or_create(nom_application='Partage de fichiers', defaults={'utilisateur': u3})
 
-        # ResourceUsage links
-        ResourceUsage.objects.get_or_create(application=app1, service=svc1)
-        ResourceUsage.objects.get_or_create(application=app1, service=svc2)
-        ResourceUsage.objects.get_or_create(application=app2, service=svc2)
-        ResourceUsage.objects.get_or_create(application=app2, service=svc3)
-        ResourceUsage.objects.get_or_create(application=app2, service=svc4)
-        ResourceUsage.objects.get_or_create(application=app3, service=svc5)
+        # Usages de ressources
+        UsageRessource.objects.get_or_create(application=app1, service=svc1)   # Réseau local → DNS
+        UsageRessource.objects.get_or_create(application=app1, service=svc2)   # Réseau local → DHCP
+        UsageRessource.objects.get_or_create(application=app2, service=svc3)   # Site école → Web
+        UsageRessource.objects.get_or_create(application=app2, service=svc5)   # Site école → Messagerie
+        UsageRessource.objects.get_or_create(application=app3, service=svc4)   # Partage fichiers → FTP
 
         self.stdout.write(self.style.SUCCESS("Base de données peuplée avec succès."))

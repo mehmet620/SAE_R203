@@ -1,40 +1,40 @@
 from django.contrib import admin
-from .models import ServerType, Server, User, Service, Application, ResourceUsage
+from .models import TypeServeur, Serveur, Utilisateur, Service, Application, UsageRessource
 
 
-@admin.register(ServerType)
-class ServerTypeAdmin(admin.ModelAdmin):
+@admin.register(TypeServeur)
+class TypeServeurAdmin(admin.ModelAdmin):
     list_display  = ['type', 'description']
     search_fields = ['type']
 
 
-@admin.register(Server)
-class ServerAdmin(admin.ModelAdmin):
-    list_display  = ['name', 'server_type', 'cpu_count', 'memory_capacity_gb', 'storage_capacity_gb']
-    list_filter   = ['server_type']
-    search_fields = ['name']
+@admin.register(Serveur)
+class ServeurAdmin(admin.ModelAdmin):
+    list_display  = ['nom', 'type_serveur', 'nombre_processeur', 'capacite_memoire', 'capacite_stockage']
+    list_filter   = ['type_serveur']
+    search_fields = ['nom']
 
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display  = ['last_name', 'first_name', 'email']
-    search_fields = ['email', 'last_name', 'first_name']
+@admin.register(Utilisateur)
+class UtilisateurAdmin(admin.ModelAdmin):
+    list_display  = ['nom', 'prenom', 'email']
+    search_fields = ['email', 'nom', 'prenom']
 
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display  = ['name', 'launch_server', 'used_memory_gb', 'required_ram_gb', 'launch_date']
-    list_filter   = ['launch_server']
-    search_fields = ['name']
+    list_display  = ['nom_service', 'serveur', 'espace_memoire_utilise', 'memoire_vive_necessaire', 'date_lancement']
+    list_filter   = ['serveur']
+    search_fields = ['nom_service']
 
 
 @admin.register(Application)
 class ApplicationAdmin(admin.ModelAdmin):
-    list_display  = ['name', 'user']
-    search_fields = ['name']
+    list_display  = ['nom_application', 'utilisateur']
+    search_fields = ['nom_application']
 
 
-@admin.register(ResourceUsage)
-class ResourceUsageAdmin(admin.ModelAdmin):
-    list_display  = ['application', 'service']
-    list_filter   = ['application', 'service']
+@admin.register(UsageRessource)
+class UsageRessourceAdmin(admin.ModelAdmin):
+    list_display = ['application', 'service']
+    list_filter  = ['application', 'service']

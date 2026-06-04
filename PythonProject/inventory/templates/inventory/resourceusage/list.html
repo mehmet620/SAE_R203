@@ -9,7 +9,7 @@
   <tr>
     <td><a href="{% url 'inventory:application-detail' u.application.pk %}">{{ u.application }}</a></td>
     <td>{{ u.service }}</td>
-    <td>{{ u.service.launch_server }}</td>
+    <td>{{ u.service.serveur }}</td>
     <td><a href="{% url 'inventory:resourceusage-delete' u.pk %}">Supprimer</a></td>
   </tr>
   {% empty %}<tr><td colspan="4">Aucun lien.</td></tr>{% endfor %}
